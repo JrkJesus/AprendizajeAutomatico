@@ -1,0 +1,9 @@
+c:\users\jesus\onedrive\documents\visual studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Debug\AprendizajeAuto.exe.config
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\obj\Debug\AprendizajeAuto.csprojResolveAssemblyReference.cache
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Debug\AprendizajeAuto.exe
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Debug\AprendizajeAuto.pdb
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\obj\Debug\AprendizajeAuto.exe
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\obj\Debug\AprendizajeAuto.pdb
+C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAutomatico\AprendizajeAuto\bin\Debug\AprendizajeAuto.exe.config
+C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAutomatico\AprendizajeAuto\obj\Debug\AprendizajeAuto.exe
+C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAutomatico\AprendizajeAuto\obj\Debug\AprendizajeAuto.pdb

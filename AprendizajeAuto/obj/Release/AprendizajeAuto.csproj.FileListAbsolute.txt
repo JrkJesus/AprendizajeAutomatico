@@ -1,0 +1,5 @@
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Release\AprendizajeAuto.exe.config
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Release\AprendizajeAuto.exe
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Release\AprendizajeAuto.pdb
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\obj\Release\AprendizajeAuto.exe
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\obj\Release\AprendizajeAuto.pdb

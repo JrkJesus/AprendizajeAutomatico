@@ -1,0 +1,7 @@
+PH, Cloro, Claridad, Resultado
+<7.2, 2, claro, +
+<7.2, >3, claro, -
+7.2-7.4, <1, verde, +
+7.2-7.4, 2, turbio, +
+>7.4, <1, verde, +
+>7.4, <1, turbio, -
