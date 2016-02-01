@@ -4,6 +4,8 @@ C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\Ap
 C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Debug\AprendizajeAuto.pdb
 C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\obj\Debug\AprendizajeAuto.exe
 C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\obj\Debug\AprendizajeAuto.pdb
-C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAutomatico\AprendizajeAuto\bin\Debug\AprendizajeAuto.exe.config
-C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAutomatico\AprendizajeAuto\obj\Debug\AprendizajeAuto.exe
-C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAutomatico\AprendizajeAuto\obj\Debug\AprendizajeAuto.pdb
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Debug\SwiPlCs.dll
+C:\Users\jesus\OneDrive\Documents\Visual Studio 2015\Projects\AprendizajeAuto\AprendizajeAuto\bin\Debug\SwiPlCs.xml
+C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAuto\bin\Debug\AprendizajeAuto.exe.config
+C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAuto\obj\Debug\AprendizajeAuto.exe
+C:\Users\jesus\OneDrive\Documents\GitHubVisualStudio\AprendizajeAuto\obj\Debug\AprendizajeAuto.pdb

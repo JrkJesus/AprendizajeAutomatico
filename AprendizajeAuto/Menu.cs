@@ -28,8 +28,8 @@ namespace AprendizajeAuto
 
 
             /***** ESPACIO VERSIONES *************/
-            //EspacioVersiones.train("finds.csv", 4, "+");
-            //EspacioVersiones.train("adult.train.10k.discrete_2.csv", 8, ">50K");
+                                                     //EspacioVersiones.train("finds.csv", 4, "+");
+                                                     //EspacioVersiones.train("adult.train.10k.discrete_2.csv", 8, ">50K");
 
             //Class1.generate2();
 
@@ -85,7 +85,7 @@ namespace AprendizajeAuto
             id3 cancer = new id3("id3-cancer.csv", 4);
             cancer.train();
             Console.WriteLine(cancer);
-            */      
+            /*   
             id3 finds = new id3("finds.csv", 4);
             finds.train();
             Console.WriteLine(finds);
@@ -95,18 +95,50 @@ namespace AprendizajeAuto
             Console.WriteLine(adult_10k);
             
              */
-             /*
-            ListThenEliminate a = new ListThenEliminate("finds.csv", 4, "+");
-            a.train();
-            Console.WriteLine(a);
-            
-            ListThenEliminate b = new ListThenEliminate("adult.train.10k.discrete_2.csv", 8, ">50K");
-            b.train();
-            Console.WriteLine(b);
-            
-    */
+            /*
+           ListThenEliminate a = new ListThenEliminate("finds.csv", 4, "+");
+           a.train();
+           Console.WriteLine(a);
+
+           ListThenEliminate b = new ListThenEliminate("adult.train.10k.discrete_2.csv", 8, ">50K");
+           b.train();
+           Console.WriteLine(b);
+
+
+            foreach(var asd in Class1.crearCombinacion(2))
+            {
+                Console.Write("\t(");
+                foreach (var z2 in asd)
+                {
+                    Console.Write(" {0}", z2);
+                }
+                Console.WriteLine(" )");
+            }*/
+            // Class1.prologCshar();
+
+            /*
+            Console.WriteLine(Class1.listar());
+  */  /*
+            var x = new string[] { "x1", "x2", "x3" };
+            foreach(var y in x.Permutations(2))
+            {
+                Console.Write("\t(");
+                foreach (var z2 in y)
+                {
+                    Console.Write(" {0}", z2);
+                }
+                Console.WriteLine(" )");
+            } 
+    
+          
+            Foil prueba = new Foil("foil-grande.dat", "C:\\Program Files (x86)\\swipl");
+            // prueba.aprenderPredicado("nieta");
+            prueba.aprender();  */
+            Console.WriteLine(Class1.coinNum(10));
+            //Class1.matarUnEnano();
             Console.WriteLine("------ FIN --------");
             Console.ReadKey();
+            
         }
     }
 }

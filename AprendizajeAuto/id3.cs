@@ -211,7 +211,7 @@ namespace AprendizajeAuto
             double valor = 0;
             var keyRes = dominio[i][key].Item2.Keys;
             foreach(var keyV in keyRes)
-            {
+            {   
                 double value = dominio[i][key].Item2[keyV] / (double) dominio[i][key].Item1;
                 if(value != 0)
                     valor += value * Math.Log(value, 2.0);

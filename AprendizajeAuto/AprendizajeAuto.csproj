@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SwiPlCs">
+      <HintPath>bin\SwiPlCs.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="FoilRecursivo.cs" />
+    <Compile Include="ListExtensions.cs" />
+    <Compile Include="Foil.cs" />
     <Compile Include="id3.cs" />
     <Compile Include="descensoGradiente.cs" />
     <Compile Include="EliminacionCandidatos.cs" />

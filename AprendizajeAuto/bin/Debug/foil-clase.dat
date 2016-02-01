@@ -1,0 +1,5 @@
+nieta(victor, sharon)
+padre(sharon, bob)
+padre(tom, bob)
+mujer(sharon)
+padre(bob, victor)
