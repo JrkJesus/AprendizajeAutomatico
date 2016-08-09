@@ -6,7 +6,29 @@ using System.Threading.Tasks;
 
 namespace AprendizajeAuto
 {
-    class Class2
+    class Regla
     {
+        private Literal predicado;
+        private List<Literal> precondiciones;
+
+        public Literal Predicado
+        {
+            get { return predicado; }
+        }
+
+        public List<Literal> Precondiciones
+        {
+            get { return precondiciones; }
+            set {
+                foreach (var lit in value)
+                    if (!precondiciones.Contains(lit))
+                        precondiciones.Add(lit);
+            }
+        }
+
+        public Regla(Literal pred)
+        {
+            predicado = pred;
+        }
     }
 }
