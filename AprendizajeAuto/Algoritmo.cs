@@ -12,7 +12,7 @@ namespace AprendizajeAuto
         private List<Literal> conocimientoPos;
         private List<Literal> conocimientoNeg;
         private List<Literal> baseConocimiento;
-        private HashSet<string> predicados;
+        private HashSet<Literal> predicados;
         private HashSet<string> dominio;
 
         public Algoritmo( string path, string pred_obj)
@@ -29,6 +29,7 @@ namespace AprendizajeAuto
             {
                 int natt = lit.atributos.Count();
                 Literal nuevo = new Literal(lit.predicado, natt);
+                predicados.Add(nuevo.Copy()); //para tener la cardinalidad tb
                 string[] att = lit.atributos;
                 att[natt - 1] = att[natt - 1].Remove(att[natt - 1].Count() - 1);
                 nuevo.Atributos = att;
@@ -40,7 +41,7 @@ namespace AprendizajeAuto
                 else
                 {
                     baseConocimiento.Add(nuevo);
-                    predicados.Add(lit.predicado); //Para recursivo poner fuera del else
+                    //predicados.Add(lit.predicado); //Para recursivo poner fuera del else
                 }
             }
             int n_att = conocimientoPos.ElementAt(0).nAtt;
