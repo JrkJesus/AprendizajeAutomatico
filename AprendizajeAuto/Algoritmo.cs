@@ -14,9 +14,11 @@ namespace AprendizajeAuto
         private List<Literal> baseConocimiento;
         private HashSet<Literal> predicados;
         private HashSet<string> dominio;
+        private string objetivo;
 
         public Algoritmo( string path, string pred_obj)
         {
+            objetivo = pred_obj;
             var file = (from lines in File.ReadAllLines(@path)
                         let line = lines.Split(new[] { "(" }, StringSplitOptions.RemoveEmptyEntries)
                         select new
@@ -29,7 +31,7 @@ namespace AprendizajeAuto
             {
                 int natt = lit.atributos.Count();
                 Literal nuevo = new Literal(lit.predicado, natt);
-                predicados.Add(nuevo.Copy()); //para tener la cardinalidad tb
+                predicados.Add(nuevo); //para tener la cardinalidad tb
                 string[] att = lit.atributos;
                 att[natt - 1] = att[natt - 1].Remove(att[natt - 1].Count() - 1);
                 nuevo.Atributos = att;
@@ -44,12 +46,115 @@ namespace AprendizajeAuto
                     //predicados.Add(lit.predicado); //Para recursivo poner fuera del else
                 }
             }
-            int n_att = conocimientoPos.ElementAt(0).nAtt;
+            predicados.RemoveWhere(T => T.Nombre == objetivo);
+            int n_att = conocimientoPos[0].nAtt;
             foreach (var litNeg in dominio.Repetitions(n_att))
             {
                 Literal nuevo = new Literal(pred_obj, n_att);
                 nuevo.Atributos = litNeg;
             }
+        }
+
+        public List<Regla> Foil()
+        {
+            List<Regla> reglasAprendidas = new List<Regla>();
+
+            while( !conocimientoPos.Any() )
+            {
+                int nAtt_objetivo = conocimientoPos[0].nAtt;
+                Literal pred_objetivo = new Literal(objetivo, nAtt_objetivo);
+                int ultima_var = nAtt_objetivo;
+                string[] atributos = new string[nAtt_objetivo];
+                HashSet<string> usados = new HashSet<string>();
+                for (int i = 0; i < nAtt_objetivo; i++)
+                {
+                    atributos[i] = ""+i;
+                    usados.Add(""+i);
+                }
+                pred_objetivo.Atributos = atributos;
+                Regla nuevaRegla = new Regla(pred_objetivo);
+                List<Literal> negativosAceptados = conocimientoNeg;
+
+                while( !negativosAceptados.Any() )
+                {
+                    List<Literal> candidatos = generarCandidatos(predicados, usados);
+                    double mejorGanancia = ganancia(candidatos[0], nuevaRegla);
+                    Literal mejorLiteral = candidatos[0];
+                    candidatos.RemoveAt(0);
+                    foreach(var candidato in candidatos)
+                    {
+                        double gan = ganancia(candidato, nuevaRegla);
+                        if(gan > mejorGanancia)
+                        {
+                            mejorGanancia = gan;
+                            mejorLiteral = candidato;
+                        }
+                    }
+                    nuevaRegla.Precondiciones = new List<Literal> { mejorLiteral };
+                    negativosAceptados = (from aceptados in negativosAceptados
+                                          where cubre(nuevaRegla, aceptados)
+                                          select aceptados).ToList();
+                }
+                reglasAprendidas.Add(nuevaRegla);
+                conocimientoPos = (from faltaAceptar in conocimientoPos
+                                   where !cubre(nuevaRegla, faltaAceptar)
+                                   select faltaAceptar).ToList();
+            }
+
+            return reglasAprendidas;
+        }
+
+        private List<Literal> generarCandidatos(HashSet<Literal> predicados, HashSet<string> usados)
+        {
+            List<Literal> candidatos = new List<Literal>();
+            foreach(var predicado in predicados)
+            {
+                int natt_nuevo = predicado.nAtt - 1;
+                // añadir natt_nuevo a usados
+                foreach(var atributos in usados.Repetitions(natt_nuevo+1))
+                {
+                    candidatos.Add(new Literal(predicado.Nombre, predicado.nAtt, atributos));
+                }
+            }
+            return candidatos;
+        }
+
+        private double ganancia(Literal candidato, Regla nuevaRegla)
+        {
+            /*
+             * p0 = numero de ej+ cubiertos por R
+             * n0 = numero de ej- cubiertos por R
+             * p1 = numero de ej+ cubiertos por R'
+             * n1 = numero de ej- cubiertos por R'
+             * t = numero ej+ cuebiertos en R tb cubiertos en R'
+             * 
+             */
+            Regla reglaConCandidato = nuevaRegla;
+            reglaConCandidato.Precondiciones = new List<Literal> { candidato };
+            int p0 = (from positivo in conocimientoPos
+                     where cubre(nuevaRegla, positivo)
+                     select positivo).Count(),
+                p1 = (from positivo in conocimientoPos
+                    where cubre(reglaConCandidato, positivo)
+                    select positivo).Count(),
+                n0 = (from negativo in conocimientoNeg
+                     where cubre(nuevaRegla, negativo)
+                     select negativo).Count(),
+                n1 = (from negativo in conocimientoNeg
+                    where cubre(reglaConCandidato, negativo)
+                    select negativo).Count(),
+                t = (from positivo in conocimientoPos
+                    where cubre(nuevaRegla, positivo) && !cubre(reglaConCandidato, positivo)
+                    select positivo).Count();
+            if (t == 0)
+                return 0;
+            else
+                return  t*( Math.Log(p1/(p1+n1)) - Math.Log(p1 / (p1 + n1)) );
+        }
+
+        private bool cubre(Regla nuevaRegla, Literal faltaAceptar)
+        {
+            throw new NotImplementedException();
         }
     }
 }

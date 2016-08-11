@@ -24,7 +24,13 @@
         {
             nombre = _nombre;
             nAtributos = _nAtt;
+        }
 
+        public Literal(string _nombre, int _nAtt, string[] _atributos)
+        {
+            nombre = _nombre;
+            nAtributos = _nAtt;
+            atributos = (string[])_atributos.Clone();
         }
     }
 }
