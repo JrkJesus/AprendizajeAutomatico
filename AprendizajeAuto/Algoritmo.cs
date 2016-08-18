@@ -154,7 +154,17 @@ namespace AprendizajeAuto
 
         private bool cubre(Regla nuevaRegla, Literal faltaAceptar)
         {
-            throw new NotImplementedException();
+            Dictionary<string, string> valores_variable = new Dictionary<string, string>();
+
+            for(int i = 0; i<nuevaRegla.Predicado.nAtt; i++)
+            {
+                valores_variable.Add(nuevaRegla.Predicado.Atributos[i], faltaAceptar.Atributos[i]);
+            }
+            
+            foreach(var condicion in nuevaRegla.Precondiciones)
+            {
+
+            }
         }
     }
 }
