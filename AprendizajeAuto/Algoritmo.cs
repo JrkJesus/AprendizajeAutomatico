@@ -154,17 +154,53 @@ namespace AprendizajeAuto
 
         private bool cubre(Regla nuevaRegla, Literal faltaAceptar)
         {
-            Dictionary<string, string> valores_variable = new Dictionary<string, string>();
+            Dictionary<string, List<string> > valores_vars = new Dictionary<string, List<string> >();
 
             for(int i = 0; i<nuevaRegla.Predicado.nAtt; i++)
             {
-                valores_variable.Add(nuevaRegla.Predicado.Atributos[i], faltaAceptar.Atributos[i]);
+                valores_vars.Add(nuevaRegla.Predicado.Atributos[i],
+                                 new List<string> { faltaAceptar.Atributos[i] });
             }
-            
-            foreach(var condicion in nuevaRegla.Precondiciones)
+            foreach( var condicion in nuevaRegla.Precondiciones)
             {
-
+                if (!cubre(condicion, valores_vars))
+                    return false;
             }
+
+            return true;
+        }
+
+        public bool cubre(Literal condicion, Dictionary<string, List<string> > valores_vars)
+        {
+            List<string>[] atributos_a_buscar = new List<string>[condicion.nAtt];
+
+            for(int i = 0; i<condicion.nAtt; i++)
+            {
+                if (valores_vars.ContainsKey(condicion.Atributos[i]))
+                    atributos_a_buscar[i] = valores_vars[condicion.Atributos[i]];
+                else
+                    atributos_a_buscar[i] = new List<string> { "?" };
+            }
+
+            var posibles_valores = (from conocimiento in baseConocimiento
+                                    where (conocimiento.Nombre == condicion.Nombre)
+                                        && completa(conocimiento, atributos_a_buscar)
+                                    select conocimiento.Atributos);
+        }
+
+        private bool completa(Literal conocimiento, List<string>[] atributos_a_buscar)
+        {
+            bool esCompletado = true;
+            int i = 0;
+
+            while( i<conocimiento.nAtt && esCompletado)
+            {
+                esCompletado = atributos_a_buscar[i].Contains("?") 
+                                || atributos_a_buscar[i].Contains(conocimiento.Atributos[i]);
+                i++;
+            }
+
+            return esCompletado;
         }
     }
 }
