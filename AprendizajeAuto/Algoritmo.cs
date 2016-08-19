@@ -97,6 +97,7 @@ namespace AprendizajeAuto
                     foreach(var candidato in candidatos)
                     { 
                         double gan = ganancia(candidato, nuevaRegla, p0, n0);
+                       // Console.WriteLine(candidato + " -> " + gan);
                         if(gan > mejorGanancia)
                         {
                             mejorGanancia = gan;
@@ -107,7 +108,7 @@ namespace AprendizajeAuto
                     negativosAceptados = (from aceptados in negativosAceptados
                                           where cubre(nuevaRegla, aceptados)
                                           select aceptados).ToList();
-                    Console.WriteLine(nuevaRegla + "\n \t\t -> negativos = " + negativosAceptados.Count());
+                    //Console.WriteLine(nuevaRegla + "\n \t\t -> negativos = " + negativosAceptados.Count());
                 }
                 reglasAprendidas.Add(nuevaRegla);
                 conocimientoPos = (from faltaAceptar in conocimientoPos
@@ -124,9 +125,14 @@ namespace AprendizajeAuto
             List<Literal> candidatos = new List<Literal>();
             foreach(var predicado in predicados)
             {
-                int natt_nuevo = predicado.nAtt - 1;
+                int natt_nuevo = Convert.ToInt32(usados.Max());
+                HashSet<string> usados_cpy = new HashSet<string>(usados);
+                for (int i = 0; i < predicado.nAtt-1; i++)
+                {
+                    usados_cpy.Add("" + (i+natt_nuevo+1) );
+                }
                 // añadir natt_nuevo a usados
-                foreach(var atributos in usados.Repetitions(natt_nuevo+1))
+                foreach (var atributos in usados_cpy.Repetitions(predicado.nAtt))
                 {
                     candidatos.Add(new Literal(predicado.Nombre, predicado.nAtt, atributos));
                 }
