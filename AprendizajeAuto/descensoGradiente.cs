@@ -1,43 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AprendizajeAuto
 {
-    class descensoGradiente
+    class DescensoGradiente
     {
-        public void algorith()
+
+
+        public double[] gradiente(double alpha, double[] x, double[] y, double ep = 0.0001, double max_iter = 10000)
         {
+            bool converge = false;
+            int i = 0,
+                m = x.Count();
+            Random rnd = new Random();
+            double t0 = rnd.NextDouble()* x[0], 
+                t1 = rnd.NextDouble() * x[0];
 
-        }
+            var J = x.Zip(y, (a, b) => Math.Pow(t0 + t1 * a - b, 2)).Sum();
 
-        public static void leer()
-        {
-            var all_lines = File.ReadAllLines(@"ex1data1.txt");
-            var values =
-                   from lines in all_lines
-                   let data = lines.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries)
-                   select new { x = double.Parse(data[0]), y = double.Parse(data[1]) };
-
-            double theta0 = 0,
-                theta1 = 0,
-                alpha = -0.1;
-            
-            for(int i = 0; i<10000; i++)
+            while( i<max_iter && !converge)
             {
-                theta0 += alpha * (from dat in values
-                                   select dat.y + theta0 + dat.x * theta1).Sum();
-                theta1 += alpha * (from dat in values
-                                   select dat.y + theta0 + dat.x * theta1).Sum();
+                double g0 = 1.0 / m * x.Zip(y, (a, b) => (t0 + t1 * a - b)).Sum(),
+                    g1 = x.Zip(y, (a, b) => (t0 + t1 * a - b)*a).Sum();
+
+                t0 = t0 - alpha * g0;
+                t1 = t1 - alpha * g1;
+                double e = x.Zip(y, (a, b) => Math.Pow(t0 + t1 * a - b, 2)).Sum();
+
+                converge = (Math.Abs(J - e) <= ep);
+                J = e;
+                i++;
             }
-            
 
-
-            foreach (var dato in values)
-                Console.WriteLine("( {0} - {1} )", dato.x, dato.y);
+            return new double[] { t0, t1 };
         }
     }
 }
