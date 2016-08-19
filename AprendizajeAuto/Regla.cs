@@ -29,6 +29,27 @@ namespace AprendizajeAuto
         public Regla(Literal pred)
         {
             predicado = pred;
+            precondiciones = new List<Literal>();
+        }
+
+        public Regla(Regla cpy)
+        {
+            predicado = cpy.predicado;
+            precondiciones = new List<Literal>(cpy.precondiciones.Select(x => x.Clone()));
+        }
+
+        public override string ToString()
+        {
+            string s = predicado + ":-";
+
+            foreach(var condicion in Precondiciones)
+            {
+                s += "\n\t" + condicion + ",";
+            }
+            s = s.Remove(s.Length - 1);
+            s += ".";
+
+            return s;
         }
     }
 }

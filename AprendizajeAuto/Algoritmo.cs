@@ -18,6 +18,11 @@ namespace AprendizajeAuto
 
         public Algoritmo( string path, string pred_obj)
         {
+            predicados = new HashSet<Literal>();
+            dominio = new HashSet<string>();
+            baseConocimiento = new List<Literal>();
+            conocimientoPos = new List<Literal>();
+            conocimientoNeg = new List<Literal>();
             objetivo = pred_obj;
             var file = (from lines in File.ReadAllLines(@path)
                         let line = lines.Split(new[] { "(" }, StringSplitOptions.RemoveEmptyEntries)
@@ -31,7 +36,7 @@ namespace AprendizajeAuto
             {
                 int natt = lit.atributos.Count();
                 Literal nuevo = new Literal(lit.predicado, natt);
-                predicados.Add(nuevo); //para tener la cardinalidad tb
+                predicados.Add(nuevo.Clone()); //para tener la cardinalidad tb
                 string[] att = lit.atributos;
                 att[natt - 1] = att[natt - 1].Remove(att[natt - 1].Count() - 1);
                 nuevo.Atributos = att;
@@ -52,14 +57,16 @@ namespace AprendizajeAuto
             {
                 Literal nuevo = new Literal(pred_obj, n_att);
                 nuevo.Atributos = litNeg;
+                conocimientoNeg.Add(nuevo);
             }
+            conocimientoNeg.RemoveAll(T => conocimientoPos.Contains(T));
         }
 
         public List<Regla> Foil()
         {
             List<Regla> reglasAprendidas = new List<Regla>();
 
-            while( !conocimientoPos.Any() )
+            while( conocimientoPos.Any() )
             {
                 int nAtt_objetivo = conocimientoPos[0].nAtt;
                 Literal pred_objetivo = new Literal(objetivo, nAtt_objetivo);
@@ -75,15 +82,21 @@ namespace AprendizajeAuto
                 Regla nuevaRegla = new Regla(pred_objetivo);
                 List<Literal> negativosAceptados = conocimientoNeg;
 
-                while( !negativosAceptados.Any() )
+                while( negativosAceptados.Any() )
                 {
                     List<Literal> candidatos = generarCandidatos(predicados, usados);
-                    double mejorGanancia = ganancia(candidatos[0], nuevaRegla);
+                    float p0 = (from positivo in conocimientoPos
+                              where cubre(nuevaRegla, positivo)
+                              select positivo).Count(),
+                         n0 = (from negativo in conocimientoNeg
+                              where cubre(nuevaRegla, negativo)
+                              select negativo).Count();
+                    double mejorGanancia = ganancia(candidatos[0], nuevaRegla, p0, n0);
                     Literal mejorLiteral = candidatos[0];
                     candidatos.RemoveAt(0);
                     foreach(var candidato in candidatos)
-                    {
-                        double gan = ganancia(candidato, nuevaRegla);
+                    { 
+                        double gan = ganancia(candidato, nuevaRegla, p0, n0);
                         if(gan > mejorGanancia)
                         {
                             mejorGanancia = gan;
@@ -94,11 +107,13 @@ namespace AprendizajeAuto
                     negativosAceptados = (from aceptados in negativosAceptados
                                           where cubre(nuevaRegla, aceptados)
                                           select aceptados).ToList();
+                    Console.WriteLine(nuevaRegla + "\n \t\t -> negativos = " + negativosAceptados.Count());
                 }
                 reglasAprendidas.Add(nuevaRegla);
                 conocimientoPos = (from faltaAceptar in conocimientoPos
                                    where !cubre(nuevaRegla, faltaAceptar)
                                    select faltaAceptar).ToList();
+               
             }
 
             return reglasAprendidas;
@@ -119,7 +134,7 @@ namespace AprendizajeAuto
             return candidatos;
         }
 
-        private double ganancia(Literal candidato, Regla nuevaRegla)
+        private double ganancia(Literal candidato, Regla nuevaRegla, float p0, float n0)
         {
             /*
              * p0 = numero de ej+ cubiertos por R
@@ -129,27 +144,21 @@ namespace AprendizajeAuto
              * t = numero ej+ cuebiertos en R tb cubiertos en R'
              * 
              */
-            Regla reglaConCandidato = nuevaRegla;
+            Regla reglaConCandidato = new Regla(nuevaRegla);
             reglaConCandidato.Precondiciones = new List<Literal> { candidato };
-            int p0 = (from positivo in conocimientoPos
-                     where cubre(nuevaRegla, positivo)
-                     select positivo).Count(),
-                p1 = (from positivo in conocimientoPos
+            float p1 = (from positivo in conocimientoPos
                     where cubre(reglaConCandidato, positivo)
                     select positivo).Count(),
-                n0 = (from negativo in conocimientoNeg
-                     where cubre(nuevaRegla, negativo)
-                     select negativo).Count(),
                 n1 = (from negativo in conocimientoNeg
                     where cubre(reglaConCandidato, negativo)
                     select negativo).Count(),
                 t = (from positivo in conocimientoPos
-                    where cubre(nuevaRegla, positivo) && !cubre(reglaConCandidato, positivo)
+                    where cubre(nuevaRegla, positivo) && cubre(reglaConCandidato, positivo)
                     select positivo).Count();
             if (t == 0)
                 return 0;
             else
-                return  t*( Math.Log(p1/(p1+n1)) - Math.Log(p1 / (p1 + n1)) );
+                return  t*( Math.Log(p1/(p1+n1)) - Math.Log(p0 / (p0 + n0)) );
         }
 
         private bool cubre(Regla nuevaRegla, Literal faltaAceptar)
@@ -186,6 +195,18 @@ namespace AprendizajeAuto
                                     where (conocimiento.Nombre == condicion.Nombre)
                                         && completa(conocimiento, atributos_a_buscar)
                                     select conocimiento.Atributos);
+            if (posibles_valores.Any())
+            {
+                for(int i = 0; i<condicion.nAtt; i++)
+                {
+                    valores_vars[condicion.Atributos[i]] = (from valor in posibles_valores
+                                                            select valor[i]).Distinct().ToList();
+                }
+
+                return true;
+            }
+            else
+                return false;
         }
 
         private bool completa(Literal conocimiento, List<string>[] atributos_a_buscar)

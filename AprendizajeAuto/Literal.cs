@@ -1,4 +1,6 @@
-﻿namespace AprendizajeAuto
+﻿using System;
+
+namespace AprendizajeAuto
 {
     class Literal
     {
@@ -30,7 +32,56 @@
         {
             nombre = _nombre;
             nAtributos = _nAtt;
-            atributos = (string[])_atributos.Clone();
+            if(_atributos != null)
+                atributos = (string[])_atributos.Clone();
+        }
+
+        internal Literal Clone()
+        {
+            return new Literal(nombre, nAtt, atributos);
+        }
+
+        public override string ToString()
+        {
+            string s = nombre + "(";
+            foreach(var atributo in atributos)
+            {
+                s += "x"+ atributo + ", ";
+            }
+
+            s = s.Remove(s.Length - 2);
+            s += ")";
+
+            return s;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Literal)
+            {
+                Literal lit = (Literal)obj;
+                if (lit.Nombre == nombre && lit.nAtt == nAtributos)
+                {
+                    if (atributos != null && lit.atributos != null)
+                    {
+                        for (int i = 0; i < nAtributos; i++)
+                            if (atributos[i] != lit.Atributos[i])
+                                return false;
+                        return true;
+                    }
+                    else
+                        return atributos == null && lit.atributos == null;
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return nAtributos * nombre.GetHashCode() ;
         }
     }
 }
