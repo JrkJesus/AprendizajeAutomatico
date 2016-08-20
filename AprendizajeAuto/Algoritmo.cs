@@ -62,9 +62,10 @@ namespace AprendizajeAuto
             conocimientoNeg.RemoveAll(T => conocimientoPos.Contains(T));
         }
 
-        public List<Regla> Foil()
+        public List<Regla> Foil(bool recursive)
         {
             List<Regla> reglasAprendidas = new List<Regla>();
+            bool añadir = recursive;
 
             while( conocimientoPos.Any() )
             {
@@ -97,7 +98,7 @@ namespace AprendizajeAuto
                     foreach(var candidato in candidatos)
                     { 
                         double gan = ganancia(candidato, nuevaRegla, p0, n0);
-                       // Console.WriteLine(candidato + " -> " + gan);
+                        Console.WriteLine(candidato + " -> " + gan);
                         if(gan > mejorGanancia)
                         {
                             mejorGanancia = gan;
@@ -108,13 +109,21 @@ namespace AprendizajeAuto
                     negativosAceptados = (from aceptados in negativosAceptados
                                           where cubre(nuevaRegla, aceptados)
                                           select aceptados).ToList();
-                    //Console.WriteLine(nuevaRegla + "\n \t\t -> negativos = " + negativosAceptados.Count());
+                    
+                    if (añadir)
+                    {
+                        predicados.Add(new Literal(objetivo, conocimientoPos[0].nAtt));
+                        añadir = false;
+                    }
                 }
                 reglasAprendidas.Add(nuevaRegla);
+               
                 conocimientoPos = (from faltaAceptar in conocimientoPos
                                    where !cubre(nuevaRegla, faltaAceptar)
                                    select faltaAceptar).ToList();
-               
+                Console.WriteLine(nuevaRegla + "\n \t\t -> faltan = " + conocimientoPos.Count());
+                predicados.RemoveWhere(T => T.Nombre == objetivo);
+                añadir = recursive;
             }
 
             return reglasAprendidas;
