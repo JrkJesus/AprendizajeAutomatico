@@ -106,6 +106,10 @@ namespace AprendizajeAuto
                         }
                     }
                     nuevaRegla.Precondiciones = new List<Literal> { mejorLiteral };
+                    foreach( var variable in mejorLiteral.Atributos )
+                    {
+                         usados.Add(variable);
+                    }
                     negativosAceptados = (from aceptados in negativosAceptados
                                           where cubre(nuevaRegla, aceptados)
                                           select aceptados).ToList();
